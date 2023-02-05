@@ -106,3 +106,5 @@ dist
 pnpm-lock.yaml
 *bak*
 .DS_Store
+test-output/*
+test-data/*

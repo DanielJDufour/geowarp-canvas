@@ -1,0 +1,53 @@
+{
+  "name": "geowarp-canvas",
+  "version": "0.0.0",
+  "description": "Adds HTML Canvas Support to GeoWarp",
+  "main": "index.js",
+  "files": [
+    "index.js"
+  ],
+  "scripts": {
+    "clean": "rm -fr ./test-output/*",
+    "setup": "cd test-data && ./setup.sh",
+    "test": "TIME=true node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DanielJDufour/geowarp-canvas.git"
+  },
+  "keywords": [
+    "canvas",
+    "cutline",
+    "geowarp",
+    "gis",
+    "imagery",
+    "map",
+    "reproject",
+    "resample",
+    "satellite"
+  ],
+  "author": "Daniel J. Dufour",
+  "license": "CC0-1.0",
+  "bugs": {
+    "url": "https://github.com/DanielJDufour/geowarp-canvas/issues"
+  },
+  "homepage": "https://github.com/DanielJDufour/geowarp-canvas#readme",
+  "devDependencies": {
+    "calc-image-stats": "^0.7.0",
+    "canvas": "^2.11.0",
+    "flug": "^2.4.0",
+    "geotiff": "^1.0.9",
+    "geotiff-epsg-code": "^0.2.0",
+    "geotiff-no-data": "^0.2.0",
+    "proj4-fully-loaded": "^0.2.0",
+    "reproject-bbox": "^0.5.0",
+    "srvd": "^0.6.0",
+    "write-image": "^0.2.0"
+  },
+  "dependencies": {
+    "geowarp": "*",
+    "guess-image-layout": "*",
+    "pixel-utils": "*",
+    "xdim": "*"
+  }
+}

@@ -1,6 +1,6 @@
 {
   "name": "geowarp-canvas",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Adds HTML Canvas Support to GeoWarp",
   "main": "./index.js",
   "files": [

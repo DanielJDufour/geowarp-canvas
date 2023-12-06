@@ -8,8 +8,9 @@
   ],
   "scripts": {
     "clean": "rm -fr ./test-output/*",
+    "format": "npx prettier --arrow-parens=avoid --trailing-comma=none --write *.js",
     "setup": "cd test-data && ./setup.sh",
-    "test": "TIME=true node test.js"
+    "test": "LOG_SKIP=false TIME=true node test.js"
   },
   "repository": {
     "type": "git",
@@ -33,21 +34,21 @@
   },
   "homepage": "https://github.com/DanielJDufour/geowarp-canvas#readme",
   "devDependencies": {
-    "calc-image-stats": "^0.7.0",
-    "canvas": "^2.11.0",
-    "flug": "^2.4.0",
-    "geotiff": "^1.0.9",
-    "geotiff-epsg-code": "^0.2.0",
+    "calc-image-stats": "^0.9.0",
+    "canvas": "^2.11.2",
+    "flug": "^2.6.0",
+    "geotiff": "1.0.9",
+    "geotiff-epsg-code": "^0.3.1",
     "geotiff-no-data": "^0.2.0",
+    "geowarp": "link:../geowarp",
     "proj4-fully-loaded": "^0.2.0",
-    "reproject-bbox": "^0.5.0",
+    "reproject-bbox": "^0.12.0",
     "srvd": "^0.6.0",
     "write-image": "^0.2.0"
   },
   "dependencies": {
-    "geowarp": "*",
-    "guess-image-layout": "*",
-    "pixel-utils": "*",
-    "xdim": "*"
+    "guess-image-layout": "^0.1.0",
+    "pixel-utils": "^0.9.0",
+    "xdim": "^1.10.1"
   }
 }

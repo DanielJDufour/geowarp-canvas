@@ -38,8 +38,8 @@ function geowarp_canvas(geowarp) {
     options.out_width = Math.round(out_canvas.width * x_resolution);
 
     // re-adjust resolution according to pixel necessary rounding
-    x_resolution = options.out_height / out_canvas.height;
-    y_resolution = options.out_width / out_canvas.width;
+    x_resolution = options.out_width / out_canvas.width;
+    y_resolution = options.out_height / out_canvas.height;
 
     const scale = [1 / x_resolution, 1 / y_resolution];
 
@@ -47,6 +47,9 @@ function geowarp_canvas(geowarp) {
 
     // don't try to render pixels that have one or more no data values
     options.skip_no_data_strategy ??= "any";
+
+    // don't try to insert null values when expr returns null
+    options.insert_null_strategy = "skip";
 
     if (!options.expr) {
       if (palette) {

@@ -13,18 +13,19 @@ function geowarp_canvas(geowarp) {
     draw,
     before_draw,
     after_draw,
+    before_warp,
+    after_warp,
     palette,
     flip,
     ...rest
   }) {
     // don't activate plugin
-    if (!plugins.includes("canvas"))
+    if (!plugins.includes("canvas")) {
       return geowarp({ ...rest, plugins, in_stats });
+    }
 
-    if (typeof out_canvas.height !== "number")
-      throw Error("[geowarp-canvas] out_canvas.height not set");
-    if (typeof out_canvas.width !== "number")
-      throw Error("[geowarp-canvas] out_canvas.width not set");
+    if (typeof out_canvas.height !== "number") throw Error("[geowarp-canvas] out_canvas.height not set");
+    if (typeof out_canvas.width !== "number") throw Error("[geowarp-canvas] out_canvas.width not set");
 
     // shallow clone of geowarp options
     const options = { ...rest };
@@ -64,10 +65,7 @@ function geowarp_canvas(geowarp) {
           };
         }
       } else {
-        if (options.debug_level >= 1)
-          console.log(
-            "[geowarp-canvas] creating expr function that fits pixels to 0-255 color space"
-          );
+        if (options.debug_level >= 1) console.log("[geowarp-canvas] creating expr function that fits pixels to 0-255 color space");
 
         const guessed = guessImageLayout({
           data: options.in_data,
@@ -96,10 +94,7 @@ function geowarp_canvas(geowarp) {
           no_range_value_strategy: flip ? "highest" : "lowest",
           old_no_data_value: options.in_no_data
         });
-        if (options.debug_level >= 2)
-          console.log(
-            "[geowarp-canvas] created a function for converting from raw pixel values to RGBA"
-          );
+        if (options.debug_level >= 2) console.log("[geowarp-canvas] created a function for converting from raw pixel values to RGBA");
 
         options.expr = ({ pixel }) => rawToRgbaFn(pixel);
       }
@@ -181,15 +176,17 @@ function geowarp_canvas(geowarp) {
       out_context.fillRect(0, 0, out_canvas.width, out_canvas.height);
     }
 
-    if (options.debug_level >= 2)
-      console.log(
-        "[geowarp-canvas] calling geowarp with the following options:",
-        options
-      );
+    if (options.debug_level >= 2) {
+      console.log("[geowarp-canvas] calling geowarp with the following options:", options);
+    }
 
     out_context.save();
 
+    if (typeof before_warp === "function") before_warp(options);
+
     const result = geowarp(options);
+
+    if (typeof after_warp === "function") after_warp(result);
 
     if (image_data) out_context.putImageData(image_data, 0, 0);
 

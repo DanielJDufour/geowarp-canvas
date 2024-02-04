@@ -15,12 +15,7 @@ const paint = geowarp_canvas(geowarp);
 
 const saveCanvas = (filepath, canvas) => {
   const context = canvas.getContext("2d");
-  const { data, height, width } = context.getImageData(
-    0,
-    0,
-    canvas.width,
-    canvas.height
-  );
+  const { data, height, width } = context.getImageData(0, 0, canvas.width, canvas.height);
   const { data: buf } = writeImage({ data, height, format: "PNG", width });
   fs.writeFileSync(filepath, buf);
 };
@@ -61,8 +56,7 @@ const resolutions = [
     const in_bbox = image.getBoundingBox();
     const in_height = image.getHeight();
     // files doesn't include no data value
-    const in_no_data =
-      filename === "wind_direction.tif" ? -32767 : get_geotiff_no_data(image);
+    const in_no_data = filename === "wind_direction.tif" ? -32767 : get_geotiff_no_data(image);
     let in_srs = await get_epsg_code(geotiff);
     if (in_srs === 32767 || in_srs === null) in_srs = undefined;
 
@@ -70,12 +64,8 @@ const resolutions = [
 
     const in_width = image.getWidth();
 
-    const out_bbox =
-      in_srs === out_srs
-        ? in_bbox
-        : reproject_bounding_box({ bbox: in_bbox, from: in_srs, to: out_srs });
-    const { forward, inverse } =
-      in_srs === out_srs ? {} : proj4("EPSG:" + in_srs, "EPSG:" + out_srs);
+    const out_bbox = in_srs === out_srs ? in_bbox : reproject_bounding_box({ bbox: in_bbox, from: in_srs, to: out_srs });
+    const { forward, inverse } = in_srs === out_srs ? {} : proj4("EPSG:" + in_srs, "EPSG:" + out_srs);
 
     const ratio = in_height / in_width;
 
@@ -84,13 +74,15 @@ const resolutions = [
 
     methods.forEach(method => {
       resolutions.forEach(out_resolution => {
-        const test_name =
-          "rescale-" + filename + "-" + method + "-" + out_resolution.join("-");
+        const test_name = "rescale-" + filename + "-" + method + "-" + out_resolution.join("-");
         test(test_name, async ({ eq }) => {
           console.log("starting " + test_name);
           console.log("loaded");
 
           const out_canvas = createCanvas(out_width, out_height);
+
+          let before_warp_arguments;
+          let after_warp_arguments;
 
           // console.log({in_no_data})
           paint({
@@ -112,8 +104,18 @@ const resolutions = [
             in_width,
             out_bbox,
             out_srs,
-            method
+            method,
+
+            before_warp: function () {
+              before_warp_arguments = arguments;
+            },
+            after_warp: function () {
+              after_warp_arguments = arguments;
+            }
           });
+
+          eq(typeof before_warp_arguments[0].expr, "function");
+          eq(typeof after_warp_arguments[0].out_sample_height, "number");
 
           saveCanvas("./test-output/" + test_name + ".png", out_canvas);
         });
@@ -121,9 +123,7 @@ const resolutions = [
     });
   }
 
-  const wind_direction = await GeoTIFF.fromFile(
-    "./test-data/wind_direction.tif"
-  );
+  const wind_direction = await GeoTIFF.fromFile("./test-data/wind_direction.tif");
   const wind_direction_image = await wind_direction.getImage();
   const wind_direction_data = await wind_direction_image.readRasters();
   [
@@ -170,13 +170,7 @@ const resolutions = [
           out_canvas,
           out_no_data_color: "pink",
           out_resolution,
-          after_draw: ({
-            bbox: [xmin, ymin, xmax, ymax],
-            context: ctx,
-            pixel,
-            rect,
-            scale: [width, height]
-          }) => {
+          after_draw: ({ bbox: [xmin, ymin, xmax, ymax], context: ctx, pixel, rect, scale: [width, height] }) => {
             ctx.save();
 
             // outline pixel with rectange

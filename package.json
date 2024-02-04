@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "clean": "rm -fr ./test-output/*",
-    "format": "npx prettier --arrow-parens=avoid --trailing-comma=none --write *.js",
+    "format": "npx prettier --arrow-parens=avoid --print-width=160 --trailing-comma=none --write *.js",
     "setup": "cd test-data && ./setup.sh",
     "test": "LOG_SKIP=false TEST_TIMED=true node test.js"
   },
@@ -35,13 +35,13 @@
   "homepage": "https://github.com/DanielJDufour/geowarp-canvas#readme",
   "devDependencies": {
     "canvas": "^2.11.2",
-    "flug": "^2.7.1",
+    "flug": "^2.7.2",
     "geotiff": "1.0.9",
     "geotiff-epsg-code": "^0.3.1",
     "geotiff-no-data": "^0.2.0",
-    "geowarp": "^1.25.0",
+    "geowarp": "^1.26.1",
     "proj4-fully-loaded": "^0.2.0",
-    "reproject-bbox": "^0.12.0",
+    "reproject-bbox": "^0.13.1",
     "srvd": "^0.6.0",
     "write-image": "^0.2.0"
   },

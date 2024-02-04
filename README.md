@@ -61,6 +61,19 @@ geowarp({
   },
 
   // optional
+  // called with mutable options object that will be passed to geowarp
+  before_warp: (options) => {
+    const { expr, out_height, skip_no_data_strategy, ...rest } = options;
+    // ...
+  },
+
+  // optional
+  // called after warping with result returned by geowarp
+  after_warp: (result) => {
+    console.log("result returned by geowarp:", result);
+  },
+
+  // optional
   // paint or modify the canvas before
   // drawing the rectangle for the reprojected pixel
   before_draw: ({ bbox, ...rest }) => { },
